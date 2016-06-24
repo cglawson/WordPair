@@ -45,8 +45,6 @@ public class WordPair {
                     System.out.println("Paste text into the console, be sure to have removed any newlines or paragraph breaks, then press ENTER.");
                     this.control.getLineFromConsole();
                     this.control.loadInputToModel();
-                    this.control.model.calculateProbabilities();
-                    this.control.model.printSourceDestinations();
                     break;
                 case 2:
                     System.out.println("Enter the filename, then press ENTER.");
@@ -54,9 +52,9 @@ public class WordPair {
                     this.control.loadInputFromFile(this.control.input);
                     break;
                 case 3:
-//                    System.out.println("Enter the filename, then press ENTER.");
-//                    this.control.getLineFromConsole();
-//                    this.control.loadDictionaryFile(this.control.input);
+                    System.out.println("Enter the filename, then press ENTER.");
+                    this.control.getLineFromConsole();
+                    //this.control.loadDictionaryFile(this.control.input);
                     break;
                 case 4:
                     if (!this.control.model.isModelEmpty()) {
@@ -83,7 +81,7 @@ public class WordPair {
                     }
                     break;
                 case 7:
-//                    System.out.println(this.control.cleanOutput());
+                   // System.out.println(this.control.cleanOutput());
                     break;
                 case 8:
                     System.out.println("Enter the filename, then press ENTER.");
