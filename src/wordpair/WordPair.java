@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 public class WordPair {
 
+    Control control = new Control();
     Scanner input = new Scanner(System.in);
     int menuChoice;
     boolean exit = false;
@@ -41,33 +42,61 @@ public class WordPair {
 
             switch (this.menuChoice) {
                 case 1:
-
+                    System.out.println("Paste text into the console, be sure to have removed any newlines or paragraph breaks, then press ENTER.");
+                    this.control.getLineFromConsole();
+                    this.control.loadInputToModel();
+                    this.control.model.calculateProbabilities();
+                    this.control.model.printSourceDestinations();
                     break;
                 case 2:
-
+                    System.out.println("Enter the filename, then press ENTER.");
+                    this.control.getLineFromConsole();
+                    this.control.loadInputFromFile(this.control.input);
                     break;
                 case 3:
-
+//                    System.out.println("Enter the filename, then press ENTER.");
+//                    this.control.getLineFromConsole();
+//                    this.control.loadDictionaryFile(this.control.input);
                     break;
                 case 4:
-                    
+                    if (!this.control.model.isModelEmpty()) {
+                        System.out.println("Enter the character length of the output, then press ENTER.");
+                        System.out.println(this.control.generateOutput(this.control.getIntFromConsole()));
+                    } else {
+                        System.out.print("\n* Character Pair dictionary is empty, please load input. *\n");
+                    }
                     break;
                 case 5:
-
+                    if (!this.control.model.isModelEmpty()) {
+                        System.out.println("Enter the character length of the output, then press ENTER.");
+                        System.out.println(this.control.generateOutput2(this.control.getIntFromConsole()));
+                    } else {
+                        System.out.print("\n* Character Pair dictionary is empty, please load input. *\n");
+                    }
                     break;
                 case 6:
-
+                    if (!this.control.model.isModelEmpty()) {
+                        System.out.println("Enter the character length of the output, then press ENTER.");
+                        System.out.println(this.control.generateOutput3(this.control.getIntFromConsole()));
+                    } else {
+                        System.out.print("\n* Character Pair dictionary is empty, please load input. *\n");
+                    }
                     break;
                 case 7:
+//                    System.out.println(this.control.cleanOutput());
                     break;
                 case 8:
-
+                    System.out.println("Enter the filename, then press ENTER.");
+                    this.control.getLineFromConsole();
+                    this.control.outputDictionaryToFile(this.control.input);
                     break;
                 case 9:
-
+                    System.out.println("Enter the filename, then press ENTER.");
+                    this.control.getLineFromConsole();
+                    this.control.writeOutputToFile(this.control.input);
                     break;
                 case 10:
-
+                    System.out.println("EXITED.");
                     this.exit = true;
             }
         }

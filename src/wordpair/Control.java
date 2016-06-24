@@ -28,7 +28,7 @@ public class Control {
         Random rand = new Random();
 
         while (output.length() < outputLength) { //String building loop
-            output = output + currSource;
+            output = output + " " + currSource;
             destinationsPossibleForSource = this.model.listDestinationsOfSource(currSource);
 
             while (destinationsPossibleForSource.isEmpty()) { //If a source has no destinations, pick random
@@ -58,7 +58,7 @@ public class Control {
         Random rand = new Random();
 
         while (output.length() < outputLength) { //String building loop
-            output = output + currSource; //Add onto string
+            output = output + " " + currSource; //Add onto string
 
             destinationsPossibleForSource = this.model.listDestinationsOfSource(currSource);
 
@@ -92,7 +92,7 @@ public class Control {
         Random rand = new Random();
 
         while (output.length() < outputLength) { //String building loop
-            output = output + currSource; //Add onto string
+            output = output + " " + currSource; //Add onto string
 
             destinationsPossibleForSource = this.model.listDestinationsOfSource(currSource);
 
@@ -136,7 +136,6 @@ public class Control {
 //            System.out.print("\n** No such file. **\n");
 //        }
 //    }
-
     public void loadInputFromFile(String fileName) {
         input = "";
 
@@ -144,16 +143,18 @@ public class Control {
             Scanner fileScanner = new Scanner(Paths.get(fileName));
 
             while (fileScanner.hasNextLine()) {
-                this.input = input + " " + fileScanner.nextLine();
+                this.input = fileScanner.nextLine();
+                this.loadInputToModel();
             }
 
             this.model.calculateProbabilities();
+            this.model.printSourceDestinations();
         } catch (IOException ex) {
             System.out.print("\n** No such file. **\n");
         }
     }
 
-/* Needs the most reengineering */
+    /* Needs the most reengineering */
 //    public void loadInputToModel() {
 //        for (int x = 0; x < input.length() - 1; x++) {
 //            String source = input.StringAt(x);
@@ -165,6 +166,20 @@ public class Control {
 //        this.model.calculateProbabilities();
 //        this.model.printSourceDestinations();
 //    }
+    public void loadInputToModel() {
+        Scanner in = new Scanner(this.input);
+        String previous;
+        if (in.hasNext()) {
+            String current = in.next();
+
+            while (in.hasNext()) {
+                previous = current;
+                current = in.next();
+
+                this.model.addSourceDestination(previous, current);
+            }
+        }
+    }
 
     public void outputDictionaryToFile(String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
