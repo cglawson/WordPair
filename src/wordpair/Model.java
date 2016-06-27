@@ -5,15 +5,13 @@ package wordpair;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 public class Model {
 
     private ArrayList<SourceDestination> sourceDestinations = new ArrayList<>();
-    Map<Character,Integer> indicies = new HashMap<>(500);
-    
+    Indexer indexer = new Indexer();
+
     public void addSourceDestination(String source, String destination) {
         this.sourceDestinations.add(new SourceDestination(source, destination));
     }
@@ -32,6 +30,32 @@ public class Model {
 
         this.sourceDestinations = tmp;
     }
+    
+    public void applyThresholdToDictionary(int threshold){
+        for (int x = 0; x < this.sourceDestinations.size(); x++) {
+            if(this.sourceDestinations.get(x).getOccurences() <= threshold){
+                this.sourceDestinations.remove(x);
+                x--;
+            }
+        }
+    }
+
+    public void indexDictionary() {
+        int alphabetIndex = 0;
+
+        for (int x = 0; x < this.sourceDestinations.size(); x++) {
+            if (Character.toLowerCase(this.sourceDestinations.get(x).getSource().charAt(0)) == indexer.alphabet[alphabetIndex]) {
+                indexer.updateIndex(indexer.alphabet[alphabetIndex], x);
+                if (alphabetIndex < 25) {
+                    alphabetIndex++;
+                }
+            }
+        }
+
+        for (int x : indexer.indexHolder) {
+            System.out.println(x);
+        }
+    }
 
     public void addSourceDestination(SourceDestination sourceDestination) {
         this.sourceDestinations.add(sourceDestination);
@@ -44,7 +68,7 @@ public class Model {
         for (int x = 0; x < sources.size(); x++) { //Iterate through each source
             ArrayList<SourceDestination> destinationResults = this.listDestinationsOfSource(sources.get(x));
             //Probability is based on total of occurences for all destinations of a particular source
-            int totalOccurences = this.totalOccurrencesForSource(sources.get(x));
+            int totalOccurences = this.totalOccurrencesForSource(destinationResults);
 
             for (int y = 0; y < destinationResults.size(); y++) { //Calculate for each SourceDestination
                 destinationResults.get(y).calculateProbability(totalOccurences);
@@ -83,7 +107,7 @@ public class Model {
 
         for (int x = 0; x < this.sourceDestinations.size(); x++) {
             if (x > 0) {
-                if (!this.sourceDestinations.get(x).getSource().equals(sources.get(sources.size()-1))) {
+                if (!this.sourceDestinations.get(x).getSource().equals(sources.get(sources.size() - 1))) {
                     sources.add(this.sourceDestinations.get(x).getSource());
                 }
             } else {
@@ -99,10 +123,15 @@ public class Model {
         Used to list the different possibilities for a particular source.
          */
         ArrayList<SourceDestination> destinationsOfSource = new ArrayList<>();
+        boolean firstMatch = false;
+        boolean firstMismatch = false;
 
-        for (int x = 0; x < sourceDestinations.size(); x++) {
+        for (int x = this.indexer.getIndex(Character.toLowerCase(source.charAt(0))); x < sourceDestinations.size() && !firstMismatch; x++) {
             if (source.equals(this.sourceDestinations.get(x).getSource())) {
                 destinationsOfSource.add(this.sourceDestinations.get(x));
+                firstMatch = true;
+            } else if (firstMatch) {
+                firstMismatch = true;
             }
         }
 
@@ -137,9 +166,8 @@ public class Model {
         return index;
     }
 
-    public int totalOccurrencesForSource(String source) {
+    public int totalOccurrencesForSource(ArrayList<SourceDestination> sources) {
         int totalOccurences = 0;
-        ArrayList<SourceDestination> sources = this.listDestinationsOfSource(source);
 
         for (int x = 0; x < sources.size(); x++) {
             totalOccurences += sources.get(x).getOccurences();

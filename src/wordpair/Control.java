@@ -136,6 +136,7 @@ public class Control {
 //            System.out.print("\n** No such file. **\n");
 //        }
 //    }
+    
     public void loadInputFromFile(String fileName) {
         input = "";
 
@@ -147,25 +148,17 @@ public class Control {
                 this.loadInputToModel();
             }
 
+            this.model.sortSourceDestinations();
+            this.model.removeDuplicates();
+            //this.model.applyThresholdToDictionary(2);
             this.model.calculateProbabilities();
+            this.model.indexDictionary();
             this.model.printSourceDestinations();
         } catch (IOException ex) {
             System.out.print("\n** No such file. **\n");
         }
     }
-
-    /* Needs the most reengineering */
-//    public void loadInputToModel() {
-//        for (int x = 0; x < input.length() - 1; x++) {
-//            String source = input.StringAt(x);
-//            String destination = input.StringAt(x + 1);
-//
-//            this.model.addSourceDestination(source, destination);
-//        }
-//
-//        this.model.calculateProbabilities();
-//        this.model.printSourceDestinations();
-//    }
+    
     public void loadInputToModel() {
         Scanner in = new Scanner(this.input);
         String previous;

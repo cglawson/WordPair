@@ -6,7 +6,7 @@ other destination choices for a Source.
  */
 package wordpair;
 
-public class SourceDestination { //implements Comparable<SourceDestination> {
+public class SourceDestination implements Comparable<SourceDestination> {
 
     private final String source;
     private final String destination;
@@ -57,20 +57,34 @@ public class SourceDestination { //implements Comparable<SourceDestination> {
     public void iterateOccurence() {
         this.occurences++;
     }
+    
+    public boolean isEqualTo(SourceDestination compare){
+        boolean result = false;
+        
+        if(this.source.equals(compare.getSource()) && this.destination.equals(compare.getDestination())){
+            result = true;
+        }
+        
+        return result;
+    }
 
     @Override
     public String toString() {
         //Converting String to int so that spaces are not lost in translation
-        String result = this.getSource() + " " + this.getDestination() + " " + this.getOccurences();
+        String result = this.getSource() + " " + this.getDestination() + " " + this.getOccurences() + " " + this.probability;
 
         return result;
     }
 
-//    @Override
-//    public int compareTo(SourceDestination compare) {
-//        int score = (int) this.getSource() * 1000 + (int) this.getDestination();
-//        int compareScore = (int) compare.getSource() * 1000 + (int) compare.getDestination();
-//
-//        return score - compareScore;
-//    }
+    @Override
+    public int compareTo(SourceDestination compare) {
+        //int score = (int) this.getSource() * 1000 + this.getDestination();
+        //int compareScore = (int) compare.getSource() * 1000 + (int) compare.getDestination();
+        //return score - compareScore;
+        
+        int sources = this.getSource().compareTo(compare.getSource()) * 1000;
+        int destinations = this.getDestination().compareTo(compare.getDestination());
+        
+        return sources + destinations;
+    }
 }
