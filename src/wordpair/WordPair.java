@@ -54,7 +54,7 @@ public class WordPair {
                 case 3:
                     System.out.println("Enter the filename, then press ENTER.");
                     this.control.getLineFromConsole();
-                    //this.control.loadDictionaryFile(this.control.input);
+                    this.control.loadDictionaryFile(this.control.input);
                     break;
                 case 4:
                     if (!this.control.model.isModelEmpty()) {
@@ -81,7 +81,7 @@ public class WordPair {
                     }
                     break;
                 case 7:
-                   // System.out.println(this.control.cleanOutput());
+                    System.out.println(this.control.cleanOutput());
                     break;
                 case 8:
                     System.out.println("Enter the filename, then press ENTER.");
