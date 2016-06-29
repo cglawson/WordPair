@@ -21,6 +21,31 @@ public class Control {
     String input = new String();
     String output = new String();
 
+    public String cleanOutput() {
+        if (!this.output.isEmpty()) {
+            int count = 2;
+            do {
+                this.output = this.output.replaceAll("[^a-zA-Z\\.\\s\\,!?']", " "); //Remove any 'weird' punctuation
+                this.output = this.output.replaceAll("(\\s[.,!?]\\s)", " "); //Remove lone punctuation  
+                this.output = this.output.replaceAll("\\s+", " "); //Remove double or more spaces
+            } while (count-- > 0);
+
+            //Capitalize the beginning of a sentence
+            for (int index = 0; index < this.output.length() - 2; index++) {
+                if ((this.output.charAt(index) == '.' || this.output.charAt(index) == '!' || this.output.charAt(index) == '?') && this.output.charAt(index + 1) == ' ') {
+                    this.output = this.output.substring(0, index + 1) + ' ' + Character.toUpperCase(this.output.charAt(index + 2)) + this.output.substring(index + 3);
+                }
+            }
+
+            this.output = Character.toUpperCase(this.output.charAt(0)) + this.output.substring(1);
+
+            if (Character.isAlphabetic(this.output.charAt(this.output.length() - 1))) {
+                this.output = this.output + '.';
+            }
+        }
+        return this.output;
+    }
+
     public String generateOutput(int outputLength) {
         output = "";
         String currSource = this.model.getRandomSourceDestination().getSource(); //Start with a random
@@ -121,22 +146,22 @@ public class Control {
         return numChar;
     }
 
-//    public void loadDictionaryFile(String fileName) {
-//        try {
-//            Scanner fileScanner = new Scanner(Paths.get(fileName));
-//
-//            while (fileScanner.hasNextInt()) {
-//                SourceDestination sourceDestination = new SourceDestination((String) fileScanner.nextInt(), (String) fileScanner.nextInt(), fileScanner.nextInt());
-//
-//                this.model.addSourceDestination(sourceDestination);
-//            }
-//
-//            this.model.calculateProbabilities();
-//        } catch (IOException ex) {
-//            System.out.print("\n** No such file. **\n");
-//        }
-//    }
-    
+    public void loadDictionaryFile(String fileName) {
+        try {
+            Scanner fileScanner = new Scanner(Paths.get(fileName));
+
+            while (fileScanner.hasNext()) {
+                SourceDestination sourceDestination = new SourceDestination(fileScanner.next(), fileScanner.next(), fileScanner.nextInt());
+
+                this.model.addSourceDestination(sourceDestination);
+            }
+
+            this.model.calculateProbabilities();
+        } catch (IOException ex) {
+            System.out.print("\n** No such file. **\n");
+        }
+    }
+
     public void loadInputFromFile(String fileName) {
         input = "";
 
@@ -158,7 +183,7 @@ public class Control {
             System.out.print("\n** No such file. **\n");
         }
     }
-    
+
     public void loadInputToModel() {
         Scanner in = new Scanner(this.input);
         String previous;
