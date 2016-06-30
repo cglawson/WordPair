@@ -45,11 +45,23 @@ public class WordPair {
                     System.out.println("Paste text into the console, be sure to have removed any newlines or paragraph breaks, then press ENTER.");
                     this.control.getLineFromConsole();
                     this.control.loadInputToModel();
+                    this.control.model.sortSourceDestinations();
+                    this.control.model.removeDuplicates();
+                    //this.model.applyThresholdToDictionary(2);
+                    this.control.model.calculateProbabilities();
+                    this.control.model.indexDictionary();
+                    this.control.model.printSourceDestinations();
                     break;
                 case 2:
                     System.out.println("Enter the filename, then press ENTER.");
                     this.control.getLineFromConsole();
                     this.control.loadInputFromFile(this.control.input);
+                    this.control.model.sortSourceDestinations();
+                    this.control.model.removeDuplicates();
+                    //this.model.applyThresholdToDictionary(2);
+                    this.control.model.calculateProbabilities();
+                    this.control.model.indexDictionary();
+                    this.control.model.printSourceDestinations();
                     break;
                 case 3:
                     System.out.println("Enter the filename, then press ENTER.");

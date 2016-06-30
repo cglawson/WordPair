@@ -171,14 +171,7 @@ public class Control {
             while (fileScanner.hasNextLine()) {
                 this.input = fileScanner.nextLine();
                 this.loadInputToModel();
-            }
-
-            this.model.sortSourceDestinations();
-            this.model.removeDuplicates();
-            //this.model.applyThresholdToDictionary(2);
-            this.model.calculateProbabilities();
-            this.model.indexDictionary();
-            this.model.printSourceDestinations();
+            }            
         } catch (IOException ex) {
             System.out.print("\n** No such file. **\n");
         }
