@@ -16,49 +16,17 @@ public class Model {
         this.sourceDestinations.add(new SourceDestination(source, destination));
     }
 
-    public void removeDuplicates() {
-        ArrayList<SourceDestination> tmp = new ArrayList<>();
-
-        for (int x = 0; x < sourceDestinations.size(); x++) {
-            if ((!tmp.isEmpty()) && (tmp.get(tmp.size() - 1).isEqualTo(sourceDestinations.get(x)))) {
-                tmp.get(tmp.size() - 1).iterateOccurence();
-            } else {
-                tmp.add(sourceDestinations.get(x));
-            }
-
-        }
-
-        this.sourceDestinations = tmp;
+    public void addSourceDestination(SourceDestination sourceDestination) {
+        this.sourceDestinations.add(sourceDestination);
     }
-    
-    public void applyThresholdToDictionary(int threshold){
+
+    public void applyThresholdToDictionary(int threshold) {
         for (int x = 0; x < this.sourceDestinations.size(); x++) {
-            if(this.sourceDestinations.get(x).getOccurences() <= threshold){
+            if (this.sourceDestinations.get(x).getOccurences() <= threshold) {
                 this.sourceDestinations.remove(x);
                 x--;
             }
         }
-    }
-
-    public void indexDictionary() {
-        int alphabetIndex = 0;
-
-        for (int x = 0; x < this.sourceDestinations.size(); x++) {
-            if (Character.toLowerCase(this.sourceDestinations.get(x).getSource().charAt(0)) == indexer.alphabet[alphabetIndex]) {
-                indexer.updateIndex(indexer.alphabet[alphabetIndex], x);
-                if (alphabetIndex < 25) {
-                    alphabetIndex++;
-                }
-            }
-        }
-
-        for (int x : indexer.indexHolder) {
-            System.out.println(x);
-        }
-    }
-
-    public void addSourceDestination(SourceDestination sourceDestination) {
-        this.sourceDestinations.add(sourceDestination);
     }
 
     public void calculateProbabilities() {
@@ -76,11 +44,6 @@ public class Model {
         }
     }
 
-    public SourceDestination getSourceDestination(int index) {
-        SourceDestination result = this.sourceDestinations.get(index);
-        return result;
-    }
-
     public int getNumberOfSourceDestinations() {
         int number = this.sourceDestinations.size();
         return number;
@@ -93,6 +56,23 @@ public class Model {
          */
         Random rand = new Random();
         return this.sourceDestinations.get(rand.nextInt(sourceDestinations.size()));
+    }
+    
+    public SourceDestination getSourceDestination(int x){
+        return this.sourceDestinations.get(x);
+    }
+
+    public void indexDictionary() {
+        int alphabetIndex = 0;
+
+        for (int x = 0; x < this.sourceDestinations.size(); x++) {
+            if (Character.toLowerCase(this.sourceDestinations.get(x).getSource().charAt(0)) == indexer.alphabet[alphabetIndex]) {
+                indexer.updateIndex(indexer.alphabet[alphabetIndex], x);
+                if (alphabetIndex < 25) {
+                    alphabetIndex++;
+                }
+            }
+        }
     }
 
     public boolean isModelEmpty() {
@@ -148,6 +128,21 @@ public class Model {
         }
 
         System.out.println();
+    }
+
+    public void removeDuplicates() {
+        ArrayList<SourceDestination> tmp = new ArrayList<>();
+
+        for (int x = 0; x < sourceDestinations.size(); x++) {
+            if ((!tmp.isEmpty()) && (tmp.get(tmp.size() - 1).isEqualTo(sourceDestinations.get(x)))) {
+                tmp.get(tmp.size() - 1).iterateOccurence();
+            } else {
+                tmp.add(sourceDestinations.get(x));
+            }
+
+        }
+
+        this.sourceDestinations = tmp;
     }
 
     public void sortSourceDestinations() {

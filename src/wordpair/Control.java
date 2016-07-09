@@ -26,7 +26,7 @@ public class Control {
             int count = 2;
             do {
                 this.output = this.output.replaceAll("[^a-zA-Z\\.\\s\\,!?']", " "); //Remove any 'weird' punctuation
-                this.output = this.output.replaceAll("(\\s[.,!?]\\s)", " "); //Remove lone punctuation  
+                this.output = this.output.replaceAll("(\\s[.,!?']\\s)", " "); //Remove lone punctuation  
                 this.output = this.output.replaceAll("\\s+", " "); //Remove double or more spaces
             } while (count-- > 0);
 
@@ -37,7 +37,12 @@ public class Control {
                 }
             }
 
-            this.output = Character.toUpperCase(this.output.charAt(0)) + this.output.substring(1);
+            if (Character.isAlphabetic(this.output.charAt(0))) {
+                this.output = Character.toUpperCase(this.output.charAt(0)) + this.output.substring(1);
+            } else {
+                this.output = Character.toUpperCase(this.output.charAt(1)) + this.output.substring(22
+                );
+            }
 
             if (Character.isAlphabetic(this.output.charAt(this.output.length() - 1))) {
                 this.output = this.output + '.';
@@ -132,8 +137,38 @@ public class Control {
         return output;
     }
 
-    public void getLineFromConsole() {
-        this.input = this.console.nextLine();
+    public String generateOutput4() { //Human's choice
+        output = "";
+        String currSource = this.model.getRandomSourceDestination().getSource(); //Start with random
+        ArrayList<SourceDestination> destinationsPossibleForSource;
+        Random rand = new Random();
+        int choice = 1;
+
+        while (choice > 0) { //String building loop
+            output = output + " " + currSource; //Add onto string
+
+            destinationsPossibleForSource = this.model.listDestinationsOfSource(currSource);
+
+            while (destinationsPossibleForSource.isEmpty()) { //If list is empty choose random
+                currSource = this.model.getRandomSourceDestination().getSource();
+                destinationsPossibleForSource = this.model.listDestinationsOfSource(currSource);
+            }
+
+            for (int x = 0; x < destinationsPossibleForSource.size(); x++) {
+                System.out.println((x + 1) + ". " + destinationsPossibleForSource.get(x).toString());
+            }
+
+            System.out.println("Current Output: " + output);
+            System.out.println("Select pair from above list and press [Enter]. Enter zero to quit.");
+
+            choice = this.getIntFromConsole();
+            if (choice == 0) {
+                continue;
+            }
+            currSource = destinationsPossibleForSource.get(choice - 1).getDestination();
+        }
+
+        return output;
     }
 
     public int getIntFromConsole() {
@@ -144,6 +179,10 @@ public class Control {
             System.out.println("\n** Please enter a positive integer. **\n");
         }
         return numChar;
+    }
+
+    public void getLineFromConsole() {
+        this.input = this.console.nextLine();
     }
 
     public void loadDictionaryFile(String fileName) {
@@ -171,7 +210,7 @@ public class Control {
             while (fileScanner.hasNextLine()) {
                 this.input = fileScanner.nextLine();
                 this.loadInputToModel();
-            }            
+            }
         } catch (IOException ex) {
             System.out.print("\n** No such file. **\n");
         }
@@ -205,6 +244,13 @@ public class Control {
         } catch (IOException ex) {
             Logger.getLogger(Control.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public void postLoadInput() {
+        this.model.sortSourceDestinations();
+        this.model.removeDuplicates();
+        this.model.calculateProbabilities();
+        this.model.indexDictionary();
     }
 
     public void writeOutputToFile(String fileName) {

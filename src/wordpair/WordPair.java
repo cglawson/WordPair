@@ -20,10 +20,11 @@ public class WordPair {
         System.out.println("    4. Console output (Choose random, then roll for acceptance).");
         System.out.println("    5. Console output (Roll, choose based on probability wheel).");
         System.out.println("    6. Console output (Pure random choice from model).");
-        System.out.println("    7. Clean output.");
-        System.out.println("    8. Write dictionary to file.");
-        System.out.println("    9. Write output to file.");
-        System.out.println("    10. Exit.");
+        System.out.println("    7. Console output (User's choice).");
+        System.out.println("    8. Clean output.");
+        System.out.println("    9. Write dictionary to file.");
+        System.out.println("    10. Write output to file.");
+        System.out.println("    11. Exit.");
     }
 
     public void getMenuChoice() {
@@ -45,23 +46,13 @@ public class WordPair {
                     System.out.println("Paste text into the console, be sure to have removed any newlines or paragraph breaks, then press ENTER.");
                     this.control.getLineFromConsole();
                     this.control.loadInputToModel();
-                    this.control.model.sortSourceDestinations();
-                    this.control.model.removeDuplicates();
-                    //this.model.applyThresholdToDictionary(2);
-                    this.control.model.calculateProbabilities();
-                    this.control.model.indexDictionary();
-                    this.control.model.printSourceDestinations();
+                    this.control.postLoadInput();
                     break;
                 case 2:
                     System.out.println("Enter the filename, then press ENTER.");
                     this.control.getLineFromConsole();
                     this.control.loadInputFromFile(this.control.input);
-                    this.control.model.sortSourceDestinations();
-                    this.control.model.removeDuplicates();
-                    //this.model.applyThresholdToDictionary(2);
-                    this.control.model.calculateProbabilities();
-                    this.control.model.indexDictionary();
-                    this.control.model.printSourceDestinations();
+                    this.control.postLoadInput();
                     break;
                 case 3:
                     System.out.println("Enter the filename, then press ENTER.");
@@ -93,19 +84,27 @@ public class WordPair {
                     }
                     break;
                 case 7:
-                    System.out.println(this.control.cleanOutput());
+                    if (!this.control.model.isModelEmpty()) {
+                        System.out.println("Enter the character length of the output, then press ENTER.");
+                        System.out.println(this.control.generateOutput4());
+                    } else {
+                        System.out.print("\n* Character Pair dictionary is empty, please load input. *\n");
+                    }
                     break;
                 case 8:
-                    System.out.println("Enter the filename, then press ENTER.");
-                    this.control.getLineFromConsole();
-                    this.control.outputDictionaryToFile(this.control.input);
+                    System.out.println(this.control.cleanOutput());
                     break;
                 case 9:
                     System.out.println("Enter the filename, then press ENTER.");
                     this.control.getLineFromConsole();
-                    this.control.writeOutputToFile(this.control.input);
+                    this.control.outputDictionaryToFile(this.control.input);
                     break;
                 case 10:
+                    System.out.println("Enter the filename, then press ENTER.");
+                    this.control.getLineFromConsole();
+                    this.control.writeOutputToFile(this.control.input);
+                    break;
+                case 11:
                     System.out.println("EXITED.");
                     this.exit = true;
             }
