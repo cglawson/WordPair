@@ -40,8 +40,7 @@ public class Control {
             if (Character.isAlphabetic(this.output.charAt(0))) {
                 this.output = Character.toUpperCase(this.output.charAt(0)) + this.output.substring(1);
             } else {
-                this.output = Character.toUpperCase(this.output.charAt(1)) + this.output.substring(22
-                );
+                this.output = Character.toUpperCase(this.output.charAt(1)) + this.output.substring(2);
             }
 
             if (Character.isAlphabetic(this.output.charAt(this.output.length() - 1))) {
